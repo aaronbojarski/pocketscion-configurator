@@ -1,4 +1,4 @@
-# Pocket SCION Configurator
+# Pocketscion Configurator
 
 A wrapper around the [pocketscion network simulator](https://github.com/Anapaya/scion-sdk/tree/main/pocketscion) that allows configuration via JSON files.
 
@@ -52,9 +52,9 @@ To isolate the simulated network, you can use Linux network namespaces.
                                     └──────────────────────────────────────┘
 
 Connections:
-  • Client apps connect to Client SNAP: 10.0.100.20:10142 (control) / :10143 (data)
+  • Client apps connect to Client SNAP: 10.0.100.20:10143 (control) / :10144 (data)
   • Server apps connect to Server Endhost API: 10.0.200.20:10231
-  • Alternative: Client Endhost API at 10.0.100.20:10131, Server SNAP at 10.0.200.20:10242/:10243
+  • Alternative: Client Endhost API at 10.0.100.20:10131, Server SNAP at 10.0.200.20:10243/:10244
   • Management API available at 127.0.0.1:8082 (within simulator namespace)
 ```
 
@@ -80,7 +80,7 @@ sudo ip netns exec pocketscion_ns ./target/debug/pocketscion-configurator -c ./n
 sudo ip netns exec server_ns ./your_scion_server_app --endhost-api-addr 10.0.200.20:10231
 ```
 ```bash
-sudo ip netns exec client_ns ./your_scion_client_app --snap-addr 10.0.100.20:10142
+sudo ip netns exec client_ns ./your_scion_client_app --snap-addr 10.0.100.20:10143
 ```
 
 5. Tear down the namespaces when done.
@@ -112,11 +112,11 @@ The following shows a minimal example configuration that can be used without nam
   },
   "snaps": [
     {
-      "listening_addr": "127.0.0.1:10122",
+      "listening_addr": "127.0.0.1:10123",
       "data_planes": [
         {
           "isd_as": "1-2",
-          "listening_addr": "127.0.0.1:10123",
+          "listening_addr": "127.0.0.1:10124",
           "address_range": ["10.1.0.0/24"]
         }
       ]
@@ -132,8 +132,9 @@ The following shows a minimal example configuration that can be used without nam
     {
       "isd_as": "1-1",
       "interfaces": [1],
-      "local_addresses": [],
-      "next_hops": {}
+      "listening_addr": "127.0.0.1:10112",
+      "snap_data_plane_excludes": [],
+      "snap_data_plane_interfaces": {}
     }
   ],
   "management_listen_addr": "127.0.0.1:8082"
@@ -179,8 +180,9 @@ Defines router configurations.
 
 - **isd_as**: ISD-AS identifier for the router
 - **interfaces**: Array of interface IDs (non-zero integers)
-- **local_addresses**: Array of local IP addresses/networks (CIDR)
-- **next_hops**: Map of interface IDs (as strings) to next-hop addresses
+- **listening_addr**: Router listening address (IP:port)
+- **snap_data_plane_excludes**:
+- **snap_data_plane_interfaces**:
 
 #### Management Listen Address (Optional)
 

@@ -111,12 +111,13 @@ async fn main() -> Result<(), anyhow::Error> {
                     .map(|&i| NonZeroU16::new(i).context("Interface ID must be non-zero"))
                     .collect::<Result<Vec<_>, _>>()?;
 
-                system_state.add_router(
+                let router_id = system_state.add_router(
                     isd_as,
                     interfaces,
-                    router_config.local_addresses.clone(),
-                    router_config.next_hops.clone(),
+                    router_config.snap_data_plane_excludes.clone(),
+                    router_config.snap_data_plane_interfaces.clone(),
                 );
+                io_config.set_router_socket_addr(router_id, router_config.listening_addr);
             }
         }
 
@@ -237,14 +238,16 @@ struct EndhostApiConfig {
 
 #[derive(Debug, Serialize, Deserialize)]
 struct RouterConfig {
-    /// ISD-AS identifier for this router
+    /// ISD-AS identifier
     isd_as: String,
-    /// Interface IDs this router manages
+    /// Interface IDs
     interfaces: Vec<u16>,
-    /// Local addresses for this router
+    /// Listening address
+    listening_addr: SocketAddr,
+    /// SNAP data plane exclude addresses
     #[serde(default)]
-    local_addresses: Vec<IpNet>,
-    /// Next hop addresses (keyed by interface ID as string)
+    snap_data_plane_excludes: Vec<IpNet>,
+    /// SNAP data plane interfaces
     #[serde(default)]
-    next_hops: BTreeMap<String, SocketAddr>,
+    snap_data_plane_interfaces: BTreeMap<String, SocketAddr>,
 }

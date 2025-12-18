@@ -67,11 +67,11 @@
     },
     "snaps": [
         {
-            "listening_addr": "10.0.200.20:10242",
+            "listening_addr": "10.0.200.20:10243",
             "data_planes": [
                 {
                     "isd_as": "2-4",
-                    "listening_addr": "10.0.200.20:10243",
+                    "listening_addr": "10.0.200.20:10244",
                     "address_range": [
                         "10.1.0.0/24"
                     ]
@@ -79,11 +79,11 @@
             ]
         },
         {
-            "listening_addr": "10.0.100.20:10142",
+            "listening_addr": "10.0.100.20:10143",
             "data_planes": [
                 {
                     "isd_as": "1-4",
-                    "listening_addr": "10.0.100.20:10143",
+                    "listening_addr": "10.0.100.20:10144",
                     "address_range": [
                         "10.2.0.0/24"
                     ]
@@ -112,8 +112,9 @@
                 15,
                 10
             ],
-            "local_addresses": [],
-            "next_hops": {}
+            "listening_addr": "10.0.100.20:10132",
+            "snap_data_plane_excludes": [],
+            "snap_data_plane_interfaces": {}
         },
         {
             "isd_as": "2-3",
@@ -121,8 +122,9 @@
                 5,
                 6
             ],
-            "local_addresses": [],
-            "next_hops": {}
+            "listening_addr": "10.0.200.20:10232",
+            "snap_data_plane_excludes": [],
+            "snap_data_plane_interfaces": {}
         }
     ],
     "management_listen_addr": "127.0.0.1:8082"
