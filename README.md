@@ -1,6 +1,6 @@
 # Pocket SCION Configurator
 
-A wrapper around the (pocketscion network simulator)[https://github.com/Anapaya/scion-sdk/tree/main/pocketscion] that allows configuration via JSON files.
+A wrapper around the [pocketscion network simulator](https://github.com/Anapaya/scion-sdk/tree/main/pocketscion) that allows configuration via JSON files.
 
 
 ## Intended Use
