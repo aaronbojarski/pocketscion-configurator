@@ -10,11 +10,9 @@ use pocketscion::io_config;
 use pocketscion::network::scion::topology::{ScionAs, ScionTopology};
 use pocketscion::runtime::{PocketScionRuntime, PocketScionRuntimeBuilder};
 use pocketscion::state::SharedPocketScionState;
-use rand::SeedableRng;
-use rand_chacha::ChaCha8Rng;
 use scion_proto::address::IsdAsn;
 use serde::{Deserialize, Serialize};
-use snap_tokens::snap_token::dummy_snap_token;
+use snap_tokens::v0::dummy_snap_token;
 
 /// Pocket SCION Configurator - Configure and run pocketscion simulator with networks from JSON files
 #[derive(Parser, Debug)]
@@ -64,27 +62,16 @@ async fn main() -> Result<(), anyhow::Error> {
         // Create SCION Network Access Points (SNAPs) if present
         if let Some(snaps) = &pocket_scion.snaps {
             for snap in snaps {
+                let isd_as: IsdAsn = snap.data_plane.isd_as.parse()?;
+
                 // Add a new SNAP to the system state
-                let snap_id = system_state.add_snap();
+                let snap_id = system_state.add_snap(isd_as)?;
 
                 // Then add an IO config to declare how this control plane can be reached
                 io_config.set_snap_control_addr(snap_id, snap.listening_addr);
 
-                for data_plane in &snap.data_planes {
-                    // Parse the ISD-AS string
-                    let isd_as: IsdAsn = data_plane.isd_as.parse()?;
-
-                    // Add the SNAP data plane to the system state
-                    let dataplane_id = system_state.add_snap_data_plane(
-                        snap_id,
-                        isd_as,
-                        data_plane.address_range.clone(),
-                        ChaCha8Rng::seed_from_u64(10),
-                    );
-
-                    // Add an IO config
-                    io_config.set_snap_data_plane_addr(dataplane_id, data_plane.listening_addr);
-                }
+                // Add an IO config
+                io_config.set_snap_data_plane_addr(snap_id, snap.data_plane.listening_addr);
             }
         }
 
@@ -214,8 +201,8 @@ struct AsConfig {
 struct SnapConfig {
     /// Listening address for the SNAP's control plane
     listening_addr: SocketAddr,
-    /// This SNAP's data planes
-    data_planes: Vec<DataPlaneConfig>,
+    /// This SNAP's data plane
+    data_plane: DataPlaneConfig,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
