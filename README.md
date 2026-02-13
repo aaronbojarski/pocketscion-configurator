@@ -77,10 +77,10 @@ sudo ip netns exec pocketscion_ns ./target/debug/pocketscion-configurator -c ./n
 
 4. Connect your SCION applications to the configured SNAPs or Endhost APIs.
 ```bash
-sudo ip netns exec server_ns ./your_scion_server_app --endhost-api-addr 10.0.200.20:10231
+sudo ip netns exec server_ns ./your_scion_server_app --endhost-api-addr http://10.0.200.20:10231
 ```
 ```bash
-sudo ip netns exec client_ns ./your_scion_client_app --snap-addr 10.0.100.20:10143
+sudo ip netns exec client_ns ./your_scion_client_app --snap-addr http://10.0.100.20:10143 --snap-token ./snap.token
 ```
 
 5. Tear down the namespaces when done.
