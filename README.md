@@ -52,9 +52,9 @@ To isolate the simulated network, you can use Linux network namespaces.
                                     └──────────────────────────────────────┘
 
 Connections:
-  • Client apps connect to Client SNAP: 10.0.100.20:10143 (control) / :10144 (data)
+  • Client apps connect to Client SNAP: 10.0.100.20:10143
   • Server apps connect to Server Endhost API: 10.0.200.20:10231
-  • Alternative: Client Endhost API at 10.0.100.20:10131, Server SNAP at 10.0.200.20:10243/:10244
+  • Alternative: Client Endhost API at 10.0.100.20:10131, Server SNAP at 10.0.200.20:10243
   • Management API available at 127.0.0.1:8082 (within simulator namespace)
 ```
 
@@ -113,13 +113,11 @@ The following shows a minimal example configuration that can be used without nam
   "snaps": [
     {
       "listening_addr": "127.0.0.1:10123",
-      "data_planes": [
+      "data_plane": 
         {
           "isd_as": "1-2",
           "listening_addr": "127.0.0.1:10124",
-          "address_range": ["10.1.0.0/24"]
         }
-      ]
     }
   ],
   "endhost_apis": [
@@ -162,10 +160,9 @@ Defines SCION Network Access Points (SNAPs) for clients to connect.
 
 - **name**: Descriptive name for the SNAP
 - **listening_addr**: Control plane listening address (IP:port)
-- **data_planes**: Array of data plane configurations
+- **data_plane**: The data plane of the SNAP
   - `isd_as`: ISD-AS this data plane serves
   - `listening_addr`: Data plane listening address
-  - `address_range`: Array of IP ranges (CIDR notation) the data plane can assign
 
 #### Endhost APIs (Optional)
 

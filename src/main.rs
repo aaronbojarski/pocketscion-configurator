@@ -211,8 +211,6 @@ struct DataPlaneConfig {
     isd_as: String,
     /// The LAN address this data plane should listen on
     listening_addr: SocketAddr,
-    /// The (virtual) IP addresses this data plane can assign to its clients
-    address_range: Vec<IpNet>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
